@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://farabar-parvaz.liara.run",
-    methods: ["GET", "POST", "PUT", "DELETE"], 
+    origin: ["http://hesamoon.ir", "http://94.182.14.8", "http://172.20.15.243"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -58,15 +58,14 @@ app.post("/login", async (req, res) => {
   if (user.length > 0) {
     const number = user[0].number;
     const token = jwt.sign({ number }, "secure", { expiresIn: "1d" });
-    res.cookie("token", token, {
-      httpOnly: true, // Prevents client-side access
-      secure: true, // Required if using HTTPS
-      sameSite: "None", // Needed for cross-origin requests
-    });
-    res.json({ status: "Success" });
-  } else {
-    res.json({ status: "No Record" });
+    // res.cookie("token", token, {
+    //   httpOnly: true, // Prevents client-side access
+    //   secure: true, // Required if using HTTPS
+    //   sameSite: "None", // Needed for cross-origin requests
+    // });
+    return res.json({ status: "Success", token });
   }
+  return res.json({ status: "No Record" });
 });
 
 app.post("/logout", (req, res) => {
@@ -90,8 +89,6 @@ app.post("/", async (req, res) => {
   } = req.body;
 
   const bills = await getBills();
-
-  console.log(bills);
 
   const bill = await createBill(
     bills.length > 0 ? bills.pop().billNumber + 1 : process.env.BASEBILLNUMBER,
