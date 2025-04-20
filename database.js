@@ -65,6 +65,7 @@ export async function getBill(id) {
   );
   return rows[0];
 }
+
 export async function getUser(number, password) {
   const [rows] = await pool.query(
     `
@@ -113,7 +114,6 @@ export async function createBill(
                 'dim', JSON_OBJECT('w', ?, 'h', ?, 'l', ?)
             ),
             JSON_OBJECT(
-                'perKilo', ?,
                 'shipping', ?,
                 'service', ?,
                 'collect', ?,
@@ -166,7 +166,6 @@ export async function createBill(
       productInfo.dim.w,
       productInfo.dim.h,
       productInfo.dim.l,
-      priceInfo.perKilo,
       priceInfo.shipping,
       priceInfo.service,
       priceInfo.collect,

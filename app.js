@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://hesamoon.ir", "http://94.182.14.8", "http://172.20.15.243"],
+    origin: ["http://hesamoon.ir", "http://94.182.14.8", "http://172.20.15.243", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -56,8 +56,7 @@ app.get("/:id", async (req, res) => {
 app.post("/login", async (req, res) => {
   const user = await getUser(req.body.number, req.body.password);
   if (user.length > 0) {
-    const number = user[0].number;
-    const token = jwt.sign({ number }, "secure", { expiresIn: "1d" });
+    const token = jwt.sign({ ...user[0] }, "secure", { expiresIn: "1d" });
     // res.cookie("token", token, {
     //   httpOnly: true, // Prevents client-side access
     //   secure: true, // Required if using HTTPS
